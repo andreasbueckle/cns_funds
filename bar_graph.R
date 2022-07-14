@@ -43,5 +43,19 @@ data
   ggtitle("Remaining CNS Funds as of July 1, 2022") +
   geom_text(aes(label = paste(remaining_scaled, "$")), nudge_x = 5, size = 3)+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-.
+
+  
+  ggplot(data, aes(x = as_datetime(start_date_UNIX), xend = as_datetime(end_date_UNIX), y = project, yend = project, color = remaining_scaled)) +
+    geom_segment(stat = "identity", size = data$remaining_scaled / 100) +
+    scale_color_gradient(low = "blue", high = "red") +
+    theme_minimal() +
+    ylab("Project") +
+    xlab("Date") +
+    geom_vline(xintercept = as_datetime(as.numeric(as.POSIXct(ymd(Sys.Date())))), color = "red", size = 1.2, alpha = 0.5) +
+    labs(color = "Remaining funds in 1000$") +
+    ggtitle("Remaining CNS Funds") +
+    theme(legend.position = "right") +
+    geom_label(size = 2, label = paste(data$remaining_scaled,"K") , x = as_datetime((data$end_date_UNIX + data$start_date_UNIX) / 2))
+  
+  
   
