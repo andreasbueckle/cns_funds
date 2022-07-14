@@ -49,7 +49,7 @@ data
   
   ggplot(data, aes(x = as_datetime(start_date_UNIX), xend = as_datetime(end_date_UNIX), y = project, yend = project, color = remaining_scaled)) +
     geom_segment(stat = "identity", size = log(data$remaining_scaled )) +
-    scale_color_gradient(low = "blue", high = "red") +
+    scale_fill_distiller(palette = "RdPu", direction=1) +
     theme_minimal() +
     ylab("Project") +
     xlab("Date") +
