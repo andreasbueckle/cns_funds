@@ -2,7 +2,7 @@ library(tidyverse)
 library(lubridate)
 
 # Get this file from Andi as needed
-raw <- read_csv("HBG-Funding - Feb2, 2022.csv")
+raw <- read_csv("data/HBG-Funding - July 1, 2022.csv")
 
 renamed <- raw %>%
   rename(
@@ -12,10 +12,9 @@ renamed <- raw %>%
   )
 renamed
 
+
+
 data <- renamed %>%
-  select(
-    -c("...8", "...9")
-  ) %>%
   mutate(
     remaining_scaled = remaining / 1000,
     days_remaining = yday(mdy(renamed$end))
@@ -25,19 +24,22 @@ data <- renamed %>%
   )
 data
 
-ggplot(mtcars, aes(x = mpg, y = disp)) +
-  geom_point(aes(colour = factor(cyl))) +
-  scale_colour_brewer(palette = "BuPu")
+renamed
 
-ggplot(data, aes(x = project, y = days_remaining, fill = remaining_scaled)) +
+# ggplot(data, aes(x = project, y=days_remaining, fill = remaining_scaled)) +
+  
+  ggplot(data, aes(x = project, y=(ymd("2022-07-01") + days_remaining), fill = remaining_scaled)) +  
+  
   # scale_fill_distiller(palette = "RdPu", direction=-1) +
   # scale_fill_brewer(palette = "Dark2") +
   scale_fill_gradient(low="blue", high="red")+
   # scale_fill_brewer(direction=-1)+
-  geom_bar(stat = "identity", width = data$remaining_scaled / 800) +
+  geom_bar(stat= "identity",width =.5) +
+    ylim(ymd("2022-07-01"), ymd("2023-07-01"))+
+
   coord_flip() +
   theme_minimal() +
-  ylab("Remaining days to project end") +
+  ylab("Date") +
   xlab("Project") +
   labs(fill = "Remaining funds in 1000$") +
   ggtitle("Remaining CNS Funds") +
