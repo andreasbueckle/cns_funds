@@ -17,7 +17,9 @@ renamed
 data <- renamed %>%
   mutate(
     remaining_scaled = remaining / 1000,
-    days_remaining = as.double(difftime(mdy(end),ymd("2022-7-1"), units = "days"))
+    days_remaining = as.double(difftime(mdy(end),ymd("2022-7-1"), units = "days")),
+    start_date_UNIX = as.numeric(as.POSIXct(mdy(filtered$start))),
+    end_date_UNIX = as.numeric(as.POSIXct(mdy(filtered$end)))
   ) %>%
   filter(
     remaining_scaled != 0
