@@ -18,8 +18,8 @@ data <- renamed %>%
   mutate(
     remaining_scaled = remaining / 1000,
     days_remaining = as.double(difftime(mdy(end),ymd("2022-7-1"), units = "days")),
-    start_date_UNIX = as.numeric(as.POSIXct(mdy(filtered$start))),
-    end_date_UNIX = as.numeric(as.POSIXct(mdy(filtered$end)))
+    start_date_UNIX = as.numeric(as.POSIXct(mdy(renamed$start))),
+    end_date_UNIX = as.numeric(as.POSIXct(mdy(renamed$end)))
   ) %>%
   filter(
     remaining_scaled != 0
@@ -48,7 +48,7 @@ data
 
   
   ggplot(data, aes(x = as_datetime(start_date_UNIX), xend = as_datetime(end_date_UNIX), y = project, yend = project, color = remaining_scaled)) +
-    geom_segment(stat = "identity", size = data$remaining_scaled / 100) +
+    geom_segment(stat = "identity", size = log(data$remaining_scaled )) +
     scale_color_gradient(low = "blue", high = "red") +
     theme_minimal() +
     ylab("Project") +
