@@ -17,30 +17,31 @@ renamed
 data <- renamed %>%
   mutate(
     remaining_scaled = remaining / 1000,
-    days_remaining = yday(mdy(renamed$end))
+    days_remaining = as.double(difftime(mdy(end),ymd("2022-7-1"), units = "days"))
   ) %>%
   filter(
     remaining_scaled != 0
   )
 data
 
-renamed
+data = data %>% 
+  filter(!is.na(project))
+data
 
 # ggplot(data, aes(x = project, y=days_remaining, fill = remaining_scaled)) +
   
-  ggplot(data, aes(x = project, y=(ymd("2022-07-01") + days_remaining), fill = remaining_scaled)) +  
-  
-  # scale_fill_distiller(palette = "RdPu", direction=-1) +
-  # scale_fill_brewer(palette = "Dark2") +
-  scale_fill_gradient(low="blue", high="red")+
-  # scale_fill_brewer(direction=-1)+
+  ggplot(data, aes(y = project, x=as.Date("2022-7-1") + days_remaining, fill = remaining_scaled)) +  
+  scale_fill_distiller(palette = "RdPu", direction=1) +
+  coord_cartesian(xlim=c(as.Date("2022-7-1"), as.Date("2027-7-1")))+
   geom_bar(stat= "identity",width =.5) +
-    ylim(ymd("2022-07-01"), ymd("2023-07-01"))+
-
-  coord_flip() +
+  scale_x_date(date_breaks = "1 month", date_minor_breaks = "2 week",
+               date_labels = "%b %Y")+
   theme_minimal() +
-  ylab("Date") +
+  ylab("Days remaining") +
   xlab("Project") +
   labs(fill = "Remaining funds in 1000$") +
-  ggtitle("Remaining CNS Funds") +
-  geom_text(aes(label = paste(remaining_scaled, "$")), nudge_y = 15, size = 3)
+  ggtitle("Remaining CNS Funds as of July 1, 2022") +
+  geom_text(aes(label = paste(remaining_scaled, "$")), nudge_x = 5, size = 3)+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+.
+  
